@@ -210,7 +210,7 @@
 }
 
 
-DescribeData.2 <- function(variables = variables,
+DescribeData <- function(variables = variables,
                            normal = normal,
                            group = group,
                            df = df,
