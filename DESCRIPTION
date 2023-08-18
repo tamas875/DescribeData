@@ -1,0 +1,10 @@
+Package: DescribeData
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Tamas Szili-Torok
+Maintainer: Tamas Szili-Torok <tamasszilitorok@gmail.com>
+Description: Create baseline characteristics tables.
+License: MIT
+Encoding: UTF-8
+LazyData: true
