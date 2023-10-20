@@ -117,7 +117,7 @@
 }
 
 .varIsNumeric <- function(numeric.var, numeric.label, distribution,
-                          group, group.levels, group.levels.n, df) {
+                          group, group.levels, group.levels.n, df, between.iqr) {
   #Calculate P value
   if (distribution == 'normal') {
     p.val <- if(group.levels.n == 2) {
@@ -188,7 +188,7 @@
       upper <- .numToString(summ.qnt[which(summ.qnt$Group.1 == level.name), ]$x[, '75%'],
                             1
       )
-      median.u.l <- paste0(median, ' [', lower, ' to ', upper, ']')
+      median.u.l <- paste0(median, ' [', lower, between.iqr, upper, ']')
       new.col <- data.frame(median.u.l)
     }
 
@@ -216,7 +216,8 @@ DescribeData <- function(variables = variables,
                            df = df,
                            names = c(),
                            nmiss = TRUE,
-                           perc.format = 2) {
+                           perc.format = 2,
+                           between.iqr = ' to ') {
 
   if (!is.null(.missingVar(variables, df))) {
     stop(paste0('Variables are missing from dataframe: ',
@@ -246,7 +247,7 @@ DescribeData <- function(variables = variables,
                                 group.levels, group.levels.n, df)
     } else {
       new.rows <- .varIsNumeric(var.name, var.label, 'skewed', group,
-                                group.levels, group.levels.n, df)
+                                group.levels, group.levels.n, df, between.iqr = between.iqr)
     }
 
     if(i.var == 1) {
