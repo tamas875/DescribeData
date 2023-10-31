@@ -5,31 +5,27 @@
 DescribeData
 }
 \description{
-Make a baseline characteristics table.
+Used to create a baseline characteristics table. 
 }
 \usage{
-DescribeData(x)
+DescribeData(variables, normal, group, df, names, nmiss = TRUE, perc.format = 2, between.iqr = ' to ')
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{variables}{
-List or vector of variables. Each variable should be given as a string.
-}
-\item{normal}{
-List or vector of normally distributed variables. Each variable should be given as a string.
-}
-\item{group}{
-Grouping variable (columns) as a string.
-}
-\item{names}{
-List or vector of variable names. Each name should be given as a string.
-}
-\item{perc.format}{
-How to format percentages for categorical variables. For more information see the prop.table documentation.
-}
+  \item{variables}{A list of variables within the dataframe to be considered for the baseline table. Each variable should be given as a string.}
+  \item{normal}{A list of variables that are normally distributed and exist in the variables parameter.}
+  \item{group}{The name of the grouping variable (column) used for stratification. Should be given as a string.}
+  \item{df}{The dataframe where the variables are found. Variable names should correspond to column names in the dataframe.}
+  \item{names}{A list of row names to be specified in the baseline table. List order should match the order of variables in the "variables" parameter. Each name should be a string.}
+  \item{nmiss}{A logical value (TRUE or FALSE) specifying whether to include the number of missing values in the column/variable. (Default is TRUE)}
+  \item{perc.format}{Formatting for percentages in categorical variables. Refer to the prop.table documentation for more information.}
+  \item{between.iqr}{Optional. Specifies the character that is placed between the interquartile ranges. By default is set to ' to '.}
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Create a dataframe with column names defined by the "group" variable and row names specified by the "names" variable. 
+For normally distributed variables, calculate the mean plus the standard deviation (mean + sd). 
+For non-normally distributed variables, specify the median plus the interquartile range (median + iqr). 
+For categorical variables, specify the count (n) and the percentage of individuals in this group.
 }
 \value{
 %%  ~Describe the value returned
@@ -44,21 +40,51 @@ Tamas Szili-Torok
 }
 
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+# Example 1: Basic Usage
+# Create a baseline characteristics table for a dataset.
+# Consider variables "age," "income," and "education" stratified by the "gender" column.
+# Specify custom row names "Age", "Income" and "Education"
+baseline_data <- DescribeData(
+  variables = c("age", "income", "education"),
+  normal = c("age"),
+  group = "gender",
+  df = your_data_frame,
+  names = c("Age (years)", "Income ($)", "Education"),
+  nmiss = FALSE
+)
+View(baseline_data)
 
-## The function is currently defined as
-DescribeData (variables = variables, df = df)
-{
-  }
+\begin{table}[]
+\begin{tabular}{lllll}
+\hline
+            & Male                      & Female                  & P value          &  \\ \hline
+Age (years) & 43.0 ± 12.5               & 40.0 ± 12.5             & \textless{}0.001 &  \\
+Income (\$) & 2005.0 {[}1805 to 2293{]} & 2045 {[}1745 to 2354{]} & 0.004            &  \\
+Education   & 300 (70)                  & 400 (60)                & \textless{}0.001 &  \\ \hline
+\end{tabular}
+\end{table}
+
+# Example 2: Customized Interquartile Range Separator
+# Create a baseline characteristics table with a custom separator for interquartile ranges.
+# Use variables "height," "weight," and "blood_pressure," stratified by "smoking_status."
+# Specify row names and customize the interquartile range separator as " - ".
+baseline_data2 <- DescribeData(
+  variables = c("height", "weight", "blood_pressure"),
+  normal = c("blood_pressure"),
+  group = "smoking_status",
+  df = your_data_frame,
+  names = c("Height (m)", "Weight (kg)", "Systolic Blood Pressure (mmHg)"),
+  between.iqr = ' - '
+)
+View(baseline_data2)
+
+\begin{table}[]
+\begin{tabular}{lllll}
+\hline
+                               & Never smoked        & Currently Smokes    & Formerly smoked     & P value          \\ \hline
+Height (cm)                    & 176 {[}161 - 189{]} & 163 {[}158 - 176{]} & 174 {[}154 - 192{]} & \textless{}0.001 \\
+Weight (kg)                    & 87 {[} 69 - 103{]}  & 65 {[}54 - 77{]}    & 86 {[}56 - 106{]}   & 0.004            \\
+Systolic Blood Pressure (mmHg) & 123.3 ± 10.4        & 132 ± 11.0          & 135 ± 14.3          & \textless{}0.001 \\ \hline
+\end{tabular}
+\end{table}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
